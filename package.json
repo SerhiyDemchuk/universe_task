@@ -12,10 +12,13 @@
   "dependencies": {
     "@radix-ui/colors": "^3.0.0",
     "@radix-ui/react-form": "^0.0.3",
+    "pdfjs-dist": "^4.1.392",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-pdf": "^7.7.1"
   },
   "devDependencies": {
+    "@types/node": "^20.12.7",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
