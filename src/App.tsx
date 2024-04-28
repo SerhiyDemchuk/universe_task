@@ -1,15 +1,19 @@
 import React, { FormEvent, useState } from "react";
 import * as Form from "@radix-ui/react-form";
 
-import PdfViewer from "./components/PDFViewer.tsx";
+import { PdfViewer } from "./components/PDFViewer.tsx";
+import { PdfListItem } from "./components/PDFListItem.tsx";
 
 import "./App.css";
+import { getPDFItemsFromLocalStorage } from "./shared/helpers.ts";
 
 const url = `${import.meta.env.VITE_API_URL}?apiKey=${import.meta.env.VITE_API_KEY}`;
 
 const App = () => {
   const [text, setText] = useState<string>("");
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+
+  const pdfItems = getPDFItemsFromLocalStorage();
 
   const fetchPDF = async () => {
     try {
@@ -36,11 +40,15 @@ const App = () => {
     const fetchedUrl = await fetchPDF();
     setPdfUrl(fetchedUrl);
 
-    localStorage.setItem(crypto.randomUUID(), fetchedUrl as string);
+    localStorage.setItem(`PDF-${crypto.randomUUID()}`, fetchedUrl as string);
   };
 
   const handleText = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
+  };
+
+  const loadPDFFromLocalStorage = (key: string) => {
+    setPdfUrl(key);
   };
 
   return (
@@ -64,7 +72,23 @@ const App = () => {
       {pdfUrl ? (
         <PdfViewer pdfUrl={pdfUrl} />
       ) : (
-        <p className="flex items-center justify-center w-1/2">No PDF...</p>
+        <>
+          {pdfItems.length ? (
+            <div className="flex flex-col items-start justify-center gap-3.5">
+              {pdfItems.map((pdf) => (
+                <div
+                  onClick={() => loadPDFFromLocalStorage(pdf.value as string)}
+                  className="flex items-center gap-4 cursor-pointer"
+                  key={pdf.id}
+                >
+                  <PdfListItem id={pdf.id} title={pdf.key} />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="flex items-center justify-center w-1/2">No PDF...</p>
+          )}
+        </>
       )}
     </div>
   );
