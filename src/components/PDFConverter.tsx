@@ -1,10 +1,11 @@
 import React, { FormEvent, useState } from "react";
 import * as Form from "@radix-ui/react-form";
-import { postPDF } from "../shared/api.ts";
 
-type PDFConverterProps = {
+import { postPDF } from "@shared/api.ts";
+
+interface PDFConverterProps {
   setUrl: (url: string | null) => void;
-};
+}
 
 export const PdfConverter = ({ setUrl }: PDFConverterProps) => {
   const [text, setText] = useState<string>("");

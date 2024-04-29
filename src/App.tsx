@@ -1,17 +1,11 @@
 import { useState } from "react";
 
-import { PdfViewer } from "./components/PDFViewer.tsx";
-import { PdfList } from "./components/PDFList.tsx";
-import { PdfConverter } from "./components/PDFConverter.tsx";
+import { PdfConverter, PdfList, PdfViewer } from "@/components";
 
 import "./App.css";
 
 const App = () => {
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
-
-  const loadPDFFromLocalStorage = (key: string) => {
-    setPdfUrl(key);
-  };
 
   const closeViewer = () => {
     setPdfUrl(null);
@@ -20,11 +14,13 @@ const App = () => {
   return (
     <div className="app">
       <PdfConverter setUrl={setPdfUrl} />
-      {pdfUrl ? (
-        <PdfViewer pdfUrl={pdfUrl} closeViewer={closeViewer} />
-      ) : (
-        <PdfList loadPDFFromLocalStorage={loadPDFFromLocalStorage} />
-      )}
+      <div className="w-[initial] relative flex items-center my-0 mx-auto">
+        {pdfUrl ? (
+          <PdfViewer pdfUrl={pdfUrl} closeViewer={closeViewer} />
+        ) : (
+          <PdfList setUrl={setPdfUrl} />
+        )}
+      </div>
     </div>
   );
 };

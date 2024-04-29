@@ -1,24 +1,40 @@
-import { PdfListItem } from "./PDFListItem.tsx";
-import { getPDFItemsFromLocalStorage } from "../shared/helpers.ts";
+import { PdfListItem } from "@components/PDFListItem.tsx";
+import { usePDFItemsFromLocalStorage } from "@shared/hooks.ts";
 
-type PDFListProps = {
-  loadPDFFromLocalStorage: (value: string) => void;
-};
+interface PDFListProps {
+  setUrl: (url: string | null) => void;
+}
 
-export const PdfList = ({ loadPDFFromLocalStorage }: PDFListProps) => {
-  const pdfItems = getPDFItemsFromLocalStorage();
+export const PdfList = ({ setUrl }: PDFListProps) => {
+  const { pdfItems, removePDFItem } = usePDFItemsFromLocalStorage();
+
+  const loadPDFFromLocalStorage = (key: string | null) => {
+    setUrl(key);
+  };
+
+  const removePDFFromLocalStorage = (key: string) => {
+    localStorage.removeItem(key);
+    removePDFItem(key);
+  };
 
   return (
     <>
       {pdfItems.length ? (
-        <div className="flex flex-col items-start justify-center gap-3.5 h-[500px] overflow-y-auto">
+        <div className="flex flex-col justify-center gap-3.5 overflow-y-auto">
           {pdfItems.map((pdf) => (
             <div
-              onClick={() => loadPDFFromLocalStorage(pdf.value as string)}
-              className="flex items-center gap-4 cursor-pointer"
+              className="flex items-center justify-between gap-4 cursor-pointer"
               key={pdf.id}
             >
-              <PdfListItem pdf={pdf} />
+              <PdfListItem
+                pdf={pdf}
+                loadPDFFromLocalStorage={() =>
+                  loadPDFFromLocalStorage(pdf.value)
+                }
+                removePDFFromLocalStorage={() =>
+                  removePDFFromLocalStorage(pdf.key)
+                }
+              />
             </div>
           ))}
         </div>
