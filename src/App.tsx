@@ -26,7 +26,20 @@ const App = () => {
           "Content-Type": "application/json",
         },
       });
+
       const blob = await response.blob();
+
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        const pdfContent = event!.target!.result;
+
+        localStorage.setItem(
+          `PDF-${crypto.randomUUID()}`,
+          pdfContent as string,
+        );
+      };
+      reader.readAsDataURL(blob);
+
       return URL.createObjectURL(blob);
     } catch (error) {
       console.error("Error fetching PDF:", error);
@@ -39,8 +52,6 @@ const App = () => {
 
     const fetchedUrl = await fetchPDF();
     setPdfUrl(fetchedUrl);
-
-    localStorage.setItem(`PDF-${crypto.randomUUID()}`, fetchedUrl as string);
   };
 
   const handleText = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -64,9 +75,7 @@ const App = () => {
           </Form.Control>
         </Form.Field>
         <Form.Submit asChild>
-          <button className="box-border w-full text-violet11 shadow-blackA4 hover:bg-mauve3 inline-flex h-[35px] items-center justify-center rounded-[4px] bg-white text-amber-950 px-[15px] font-medium leading-none shadow-[0_2px_10px] focus:shadow-[0_0_0_2px] focus:shadow-black focus:outline-none mt-[10px]">
-            Конвертувати в PDF
-          </button>
+          <button className="w-full">Конвертувати в PDF</button>
         </Form.Submit>
       </Form.Root>
       {pdfUrl ? (
@@ -74,7 +83,7 @@ const App = () => {
       ) : (
         <>
           {pdfItems.length ? (
-            <div className="flex flex-col items-start justify-center gap-3.5">
+            <div className="flex flex-col items-start justify-center gap-3.5 h-[500px] overflow-y-auto">
               {pdfItems.map((pdf) => (
                 <div
                   onClick={() => loadPDFFromLocalStorage(pdf.value as string)}
