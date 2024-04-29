@@ -1,5 +1,7 @@
+import { PDFItemI } from "./types.ts";
+
 export const getPDFItemsFromLocalStorage = () => {
-  const pdfItems = [];
+  const pdfItems: PDFItemI[] = [];
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
     if (key && key.startsWith("PDF-")) {
