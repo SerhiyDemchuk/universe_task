@@ -20,7 +20,7 @@ export const PdfList = ({ setUrl }: PDFListProps) => {
   return (
     <>
       {pdfItems.length ? (
-        <div className="flex flex-col justify-center gap-3.5 overflow-y-auto">
+        <div className="flex flex-col gap-3.5 overflow-y-auto rounded-[4px] px-4 h-[500px]">
           {pdfItems.map((pdf) => (
             <div
               className="flex items-center justify-between gap-4 cursor-pointer"
@@ -39,7 +39,7 @@ export const PdfList = ({ setUrl }: PDFListProps) => {
           ))}
         </div>
       ) : (
-        <p className="flex items-center justify-center w-1/2">No PDF...</p>
+        <p className="flex items-center justify-center">No PDF...</p>
       )}
     </>
   );
